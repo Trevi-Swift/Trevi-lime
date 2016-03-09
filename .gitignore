@@ -5,6 +5,10 @@
 ## OSX generated
 .DS_Store
 
+## Swift Package Manager
+/.build
+/Packages
+
 ## Jetbrain AppCode generated
 .idea/
 
@@ -55,4 +59,3 @@ Carthage/Build
 # https://github.com/fastlane/fastlane/blob/master/docs/Gitignore.md
 fastlane/report.xml
 fastlane/screenshots
-

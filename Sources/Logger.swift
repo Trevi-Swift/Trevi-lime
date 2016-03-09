@@ -8,6 +8,7 @@
 
 import Foundation
 import Trevi
+import TreviSys
 
 /**
  A Middleware for logging client connection.

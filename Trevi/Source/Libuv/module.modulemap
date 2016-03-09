@@ -1,5 +1,0 @@
-module Libuv [system] {
-    header "uv.h"
-    link "uv"
-    export *
-}
