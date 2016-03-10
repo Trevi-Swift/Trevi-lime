@@ -22,5 +22,6 @@ let package = Package(
     	.Package(url: "https://github.com/Trevi-Swift/Trevi-sys.git", majorVersion: 0),
     	.Package(url: "https://github.com/Trevi-Swift/Trevi-middleware.git", majorVersion: 0),
     	.Package(url: "https://github.com/Trevi-Swift/Trevi.git", majorVersion: 0),
-    ]
+    ],
+    exclude: ["Makefile", "Xcode"]
 )
