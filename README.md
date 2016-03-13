@@ -1,4 +1,4 @@
-# Lime
+# Trevi-Lime
 
 [![Swift 2.2](https://img.shields.io/badge/Swift-2.2-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Mac OS X](https://img.shields.io/badge/platform-osx-lightgrey.svg?style=flat)](https://developer.apple.com/swift/)
@@ -6,7 +6,12 @@
 ![Apache 2](https://img.shields.io/badge/license-Apache2-blue.svg?style=flat)
 
 ## Overview
-Lime is improved web framework for Trevi, and Lime refers to express.js. (Lime does not support many core modules in express yet.)
+Lime is improved web framework for Trevi, and Lime refers to express.js. 
+
+## Notice
+If you want to build or test all projects at Xcode, please check out [Trevi-Dev](https://github.com/Trevi-Swift/Trevi-Dev). 
+Otherwise, you can build Trevi, lime and other packages by using Swift Package manager.  
+[Here](https://github.com/Trevi-Swift/example-trevi-lime) are an example and it now runs on Linux.  
 
 ## Features
 - powerful routing
@@ -15,9 +20,6 @@ Lime is improved web framework for Trevi, and Lime refers to express.js. (Lime d
 - View render supporting Swift Server Page template engines
 - Can parsing all type of body data
 - Make high performance.
-
-## Versioning
-Lime follows the semantic versioning scheme. The API change and backwards compatibility rules are those indicated by SemVer.
 
 ## Swift version
 Trevi works with the latest version of Swift 2.2 Snapshot. You can download Swift binaries on [here](https://swift.org/download/#latest-development-snapshots).
@@ -237,6 +239,9 @@ Trevi works with the latest version of Swift 2.2 Snapshot. You can download Swif
 10. Open your browser at [http://localhost:8080](http://localhost:8080)
 
 11. Enjoy Lime!
+
+## Versioning
+Lime follows the semantic versioning scheme. The API change and backwards compatibility rules are those indicated by SemVer.
 
 ## License
 This library is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE.txt).
