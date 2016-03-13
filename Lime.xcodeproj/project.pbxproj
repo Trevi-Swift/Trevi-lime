@@ -258,6 +258,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LIBRARY_SEARCH_PATHS = (
+					/usr/lib,
+					/usr/local/lib,
 					"$(PROJECT_DIR)/../**",
 					"$(PROJECT_DIR)/.build/**",
 					"$(BUILT_PRODUCTS_DIR)/**",
@@ -305,6 +307,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LIBRARY_SEARCH_PATHS = (
+					/usr/lib,
+					/usr/local/lib,
 					"$(PROJECT_DIR)/../**",
 					"$(PROJECT_DIR)/.build/**",
 					"$(BUILT_PRODUCTS_DIR)/**",
