@@ -3,7 +3,7 @@
 //  Trevi
 //
 //  Created by LeeYoseob on 2016. 3. 9..
-//  Copyright © 2016년 LeeYoseob. All rights reserved.
+//  Copyright © 2016 Trevi Community. All rights reserved.
 //
 
 import Foundation

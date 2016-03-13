@@ -3,7 +3,7 @@
 //  Trevi
 //
 //  Created by SeungHyunLee on 3/9/16.
-//  Copyright © 2016 LeeYoseob. All rights reserved.
+//  Copyright © 2016 Trevi Community. All rights reserved.
 //
 
 import Foundation

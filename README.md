@@ -8,8 +8,89 @@
 ## Overview
 Lime is improved web framework for Trevi, and Lime refers to express.js. (Lime does not support many core modules in express yet.)
 
+## Features
+- powerful routing
+- user-friendly usage
+- HTTP sub modules (redirection, favicon, etc)
+- View render supporting Swift Server Page template engines
+- Can parsing all type of body data
+- Make high performance.
+
 ## Versioning
 Lime follows the semantic versioning scheme. The API change and backwards compatibility rules are those indicated by SemVer.
+
+## Swift version
+Trevi works with the latest version of Swift 2.2 Snapshot. You can download Swift binaries on [here](https://swift.org/download/#latest-development-snapshots).
+
+## Installation (Ubuntu; APT-based linux)
+1. Install Swift dependencies on linux :
+    ```bash
+    sudo apt-get install clang libicu-dev
+    ```
+  
+2. Install libuv dependencies on linux :
+    ```bash
+    sudo apt-get install autoconf make build-essential gcc g++
+    ```
+  
+3. Install Swift depending on your platform on the follow [link](https://swift.org/download) (The latest version are recommended).
+
+4. After installation of Swift, check your PATH environment variable whether Swift binary path is set or not. If it is not set execute below. :
+    ```bash
+    $ export PATH=/path/to/swift/installed:"${PATH}"
+    ```
+
+    More details : 'Linux' on [here](https://swift.org/download)
+  
+5. Clone libuv :
+    ```bash
+    $ git clone https://github.com/libuv/libuv.git
+    ```
+  
+6. Install libuv :
+    ```bash
+    $ cd libuv
+    $ sh autogen.sh
+    $ ./configure
+    $ make
+    $ make check
+    $ make install
+    ```
+
+    More details : Build Instructions on [libuv](https://github.com/libuv/libuv)
+
+## Installation (OS X)
+1. Install Swift depending on your platform on the follow [link](https://swift.org/download) (The latest version are recommended).
+
+2. After installation of Swift, check your PATH environment variable whether Swift binary path is set or not. If it is not set execute below. :
+    ```bash
+    $ export PATH=/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/bin:"${PATH}"
+    ```
+
+    More details : 'Apple Platforms' on [here](https://swift.org/download)
+  
+3. Clone libuv :
+    ```bash
+    $ git clone https://github.com/libuv/libuv.git
+    ```
+  
+4. Install libuv :
+    ```bash
+    $ cd libuv
+    $ sh autogen.sh
+    $ ./configure
+    $ make
+    $ make check
+    $ make install
+    ```
+
+    or using Homebrew :
+
+    ```bash
+    $ brew install --HEAD libuv
+    ```
+
+    More details : Build Instructions on [libuv](https://github.com/libuv/libuv)
 
 ## Usage
 1. Create a new project directory
