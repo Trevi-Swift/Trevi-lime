@@ -9,6 +9,9 @@
 import Foundation
 import Trevi
 
+/*
+    For Trevi users, allow routing and to apply middlewares without difficulty.
+*/
 
 public class Lime : Routable {
     
@@ -75,29 +78,41 @@ public class Lime : Routable {
     }
 }
 
+// Needed to activate lime in the Trevi Fountain.
 extension Lime: ApplicationProtocol {
     public func createApplication() -> Any {
         return self.handle
     }
 }
 
-public class LimeInit {
-}
 
+
+// For Lime extension ServerResponse
 extension ServerResponse {
+    
+    // Lime recommend using that send rather than using write
     public func send(data: String, encoding: String! = nil, type: String! = ""){
         write(data, encoding: encoding, type: type)
-        end()
+        endReuqstAndClean()
     }
     
     public func send(data: NSData, encoding: String! = nil, type: String! = ""){
         write(data, encoding: encoding, type: type)
-        end()
+        endReuqstAndClean()
     }
     
     public func send(data: [String : String], encoding: String! = nil, type: String! = ""){
         write(data, encoding: encoding, type: type)
+        endReuqstAndClean()
+    }
+    
+    private func endReuqstAndClean(){
         end()
+        if req.files != nil {
+            for file in self.req.files.values{
+                FSBase.unlink(path: file.path)
+            }
+        }
     }
     
     public func render(path: String, args: [String:String]? = nil) {
@@ -114,9 +129,13 @@ extension ServerResponse {
             #endif
             
             if args != nil {
-                write(render.render(entirePath, args: args!))
+                render.render(entirePath, args: args!) { data in
+                    self.write(data)
+                }
             } else {
-                write(render.render(entirePath))
+                render.render(entirePath) { data in
+                    self.write(data)
+                }
             }
         }
         end()
@@ -128,7 +147,7 @@ extension ServerResponse {
     }
 }
 
-import Trevi
+
 
 
 //extention incomingMessage for lime
