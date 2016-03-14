@@ -32,7 +32,6 @@ public class Logger: Middleware {
     
     public var name: MiddlewareName
     public let format: String
-    private let logFile: FileSystem.WriteStream?
     
     public init (format: String) {
         name = .Logger
@@ -47,13 +46,9 @@ public class Logger: Middleware {
         default:
             self.format = format
         }
-        
-        let filename = "\(__dirname)/log_\(getCurrentDatetime("yyyyMMdd_hhmmss")).log"
-        logFile = FileSystem.WriteStream(path: filename)
     }
     
     deinit {
-        logFile?.close()
     }
     
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) -> () {
@@ -71,7 +66,6 @@ public class Logger: Middleware {
      */
     private func requestLog(response res: ServerResponse) {
         let log = compileLog(self, req: res.req, res: res)
-        logFile?.writeData(("\(log)\n".dataUsingEncoding(NSUTF8StringEncoding)!))
         print(log)
     }
 }

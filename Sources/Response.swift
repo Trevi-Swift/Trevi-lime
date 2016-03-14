@@ -79,7 +79,11 @@ public class Response :Sender{
         }else if let bodyString = bodyString {
             return bodyString.dataUsingEncoding(NSUTF8StringEncoding)!
         }else if (body != nil)  {
-            let jsonData = try? NSJSONSerialization.dataWithJSONObject(body!, options:NSJSONWritingOptions(rawValue:0))
+            #if os(Linux)
+                let jsonData = try? NSJSONSerialization.dataWithJSONObject(body as! AnyObject, options:NSJSONWritingOptions(rawValue:0))
+            #else
+                let jsonData = try? NSJSONSerialization.dataWithJSONObject(body!, options:NSJSONWritingOptions(rawValue:0))
+            #endif            
             // if need jsonString, use it
             return jsonData
         }
@@ -228,7 +232,7 @@ public class Response :Sender{
         return NSData()
     }
 
-    private func dictionaryToString ( dic: NSDictionary ) -> String! {
+    private func dictionaryToString ( dic: [String:String] ) -> String! {
         var resultString = ""
         for (key, value) in dic {
             if value.lengthOfBytesUsingEncoding ( NSUTF8StringEncoding ) == 0 {

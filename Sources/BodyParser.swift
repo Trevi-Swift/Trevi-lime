@@ -42,13 +42,13 @@ public class BodyParser: Middleware{
     
     public static func getBody(req: IncomingMessage, _ cb: (body: String)->()){
         
-        var body = ""
-        func ondata(dt : String){
-            body += dt
+        var body: NSMutableData = NSMutableData()
+        func ondata(dt : NSData){
+            body.appendData(dt)
         }
         
         func onend(){
-            cb(body: body)
+            cb(body:  String(data: body, encoding: NSASCIIStringEncoding)!)
         }
         req.on("data", ondata)
         req.on("end", onend)

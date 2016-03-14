@@ -20,10 +20,10 @@ public class Favicon: Middleware {
 
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
 
+        /*
         if req.url == "/favicon.ico" {
 
             #if os(Linux)
-                
             #else
                 guard let bundlePath = NSBundle.mainBundle().pathForResource(NSURL(fileURLWithPath: req.url).lastPathComponent!, ofType: nil) else{
                     return next!()
@@ -48,5 +48,7 @@ public class Favicon: Middleware {
         }else{
             next!()
         }
+        */
+        next!()
     }
 }
