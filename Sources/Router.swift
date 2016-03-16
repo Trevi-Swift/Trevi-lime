@@ -59,7 +59,7 @@ public class Router: Middleware{
                 req.baseUrl = removed
             }
             
-            layer.handleRequest(req, res: res, next: nextHandle)
+            return layer.handleRequest(req, res: res, next: nextHandle)
         }
         
         func nextHandle(){

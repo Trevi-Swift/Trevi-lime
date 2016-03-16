@@ -65,7 +65,7 @@ public class Route{
                 return nextHandle()
             }
             
-            layer.handleRequest(req, res: res, next: nextHandle)
+            return layer.handleRequest(req, res: res, next: nextHandle)
         }
         nextHandle()
     }

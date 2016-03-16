@@ -27,26 +27,42 @@ public class ServeStatic: Middleware {
         }
     }
     
+    
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
         var entirePath = req.url
+    
+        let type: String! = req.url.componentsSeparatedByString(".").last!
+        
+        guard let mType = type else {
+            return next!()
+        }
+        
+        let resultType = Mime.mimeType(mType)
+        
+        guard resultType.length() > 0 else {
+            return next!()
+        }
+        
+        
         #if os(Linux)
             entirePath = "\(basePath)/\(req.url)"
         #else
             if let bundlePath = NSBundle.mainBundle().pathForResource(NSURL(fileURLWithPath: req.url).lastPathComponent!, ofType: nil) {
                 entirePath = bundlePath
             }
+            let file = FileSystem.ReadStream(path: entirePath)
+            let buf = NSMutableData()
+            
+            file?.onClose() { handle in
+                return res.send(buf)
+            }
+            
+            file?.readStart() { error, data in
+                buf.appendData(data)
+            }
+
         #endif
         
-        let file = FileSystem.ReadStream(path: entirePath)
-        let buf = NSMutableData()
-        
-        file?.onClose() { handle in
-            return res.send(buf)
-        }
-        
-        file?.readStart() { error, data in
-            buf.appendData(data)
-        }
         next!()
     }
 }

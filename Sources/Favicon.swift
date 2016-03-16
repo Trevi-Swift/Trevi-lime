@@ -20,7 +20,7 @@ public class Favicon: Middleware {
 
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
 
-        /*
+
         if req.url == "/favicon.ico" {
 
             #if os(Linux)
@@ -28,27 +28,25 @@ public class Favicon: Middleware {
                 guard let bundlePath = NSBundle.mainBundle().pathForResource(NSURL(fileURLWithPath: req.url).lastPathComponent!, ofType: nil) else{
                     return next!()
                 }
-            #endif
-
-            let file = FileSystem.ReadStream(path: bundlePath)
-            
-            let faviconData :NSMutableData! = NSMutableData()
-            file?.onClose() { handle in
-                res.send(faviconData,type: "image/x-icon")
-            }
-            
-            file?.readStart() { error, data in
-                if error == 0{
-                    faviconData.appendData(data)
-                }else{
-                    next!()
+                
+                let file = FileSystem.ReadStream(path: bundlePath)
+                
+                let faviconData :NSMutableData! = NSMutableData()
+                file?.onClose() { handle in
+                    return res.send(faviconData,type: "image/x-icon")
                 }
-            }
+                
+                file?.readStart() { error, data in
+                    if error == 0{
+                        faviconData.appendData(data)
+                    }else{
+                        return next!()
+                    }
+                }
 
+            #endif
         }else{
-            next!()
+            return next!()
         }
-        */
-        next!()
     }
 }
