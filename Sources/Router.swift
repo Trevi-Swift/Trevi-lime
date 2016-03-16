@@ -117,31 +117,17 @@ public class Router: Middleware{
             
             let layerPath = layer.path
             
-            #if os(Linux)
-                poccessParams(layer, paramsCalled: StringWrapper(string: ""), req: req, res: res) {  err in
-                    if err != nil {
-                        return nextHandle()
-                    }
-                    
-                    if route != nil {
-                        return layer.handleRequest(req, res: res, next: nextHandle)
-                    }
-                    
-                    trimPrefix(layer, layerPath: layerPath, path: path)
+            poccessParams(layer, paramsCalled: nil, req: req, res: res) {  err in
+                if err != nil {
+                    return nextHandle()
                 }
-            #else
-                poccessParams(layer, paramsCalled: "", req: req, res: res) {  err in
-                    if err != nil {
-                        return nextHandle()
-                    }
-                    
-                    if route != nil {
-                        return layer.handleRequest(req, res: res, next: nextHandle)
-                    }
-                    
-                    trimPrefix(layer, layerPath: layerPath, path: path)
+                
+                if route != nil {
+                    return layer.handleRequest(req, res: res, next: nextHandle)
                 }
-            #endif
+                
+                trimPrefix(layer, layerPath: layerPath, path: path)
+            }
         }
         nextHandle()
     }
@@ -154,7 +140,7 @@ public class Router: Middleware{
         return _dest
     }
     
-    private func poccessParams(layer: Layer, paramsCalled: AnyObject, req: IncomingMessage, res: ServerResponse, cb:((String?)->())){
+    private func poccessParams(layer: Layer, paramsCalled: [String: String]? = nil, req: IncomingMessage, res: ServerResponse, cb:((String?)->())){
         cb(nil)
     }
     
