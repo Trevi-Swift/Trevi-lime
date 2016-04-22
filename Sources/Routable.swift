@@ -26,7 +26,7 @@ public class Routable{
     }
     
     //just function
-    public func use(fn: HttpCallback){
+    public func use(fn: LimeCallback){
         _router.use(fn)
     }
 }

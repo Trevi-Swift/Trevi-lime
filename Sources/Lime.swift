@@ -13,6 +13,8 @@ import Trevi
 /*
     For Trevi users, allow routing and to apply middlewares without difficulty.
 */
+public typealias LimeCallback = ( (Request, Response, NextCallback?) -> Void )
+
 
 public class Lime : Routable {
     
@@ -59,7 +61,7 @@ public class Lime : Routable {
         setting[name] = val
     }
     
-    public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?){
+    public func handle(req: Request, res: Response, next: NextCallback?){
 
         var done: NextCallback? = next
         
@@ -70,8 +72,9 @@ public class Lime : Routable {
                 res.write(msg)
                 res.end()
             }
-            done = finalHandler
             
+            done = finalHandler
+            res.req = req
             req.app = self
         }
 
@@ -81,80 +84,21 @@ public class Lime : Routable {
 
 // Needed to activate lime in the Trevi Fountain.
 extension Lime: ApplicationProtocol {
-    public func createApplication() -> Any {
-        return self.handle
-    }
-}
-
-
-
-// For Lime extension ServerResponse
-extension ServerResponse {
-    
-    // Lime recommend using that send rather than using write
-    public func send(data: String, encoding: String! = nil, type: String! = ""){
-        write(data, encoding: encoding, type: type)
-        endReuqstAndClean()
-    }
-    
-    public func send(data: NSData, encoding: String! = nil, type: String! = ""){
-        write(data, encoding: encoding, type: type)
-        endReuqstAndClean()
-    }
-    
-    public func send(data: [String : String], encoding: String! = nil, type: String! = ""){
-        write(data, encoding: encoding, type: type)
-        endReuqstAndClean()
-    }
-    
-    private func endReuqstAndClean(){
-        end()
-        if req.files != nil {
-            for file in self.req.files.values{
-                FSBase.unlink(path: file.path)
-            }
-        }
-    }
-    
-    public func render(path: String, args: [String:String]? = nil) {
-        if let app = req.app as? Lime, let render = app.setting["view engine"] as? Render {
-            var entirePath = path
-            #if os(Linux)
-            if let abpath = app.setting["views"] as? StringWrapper {
-                entirePath = "\(abpath.string)/\(entirePath)"
-            }
-            #else
-            if let bundlePath = NSBundle.mainBundle().pathForResource(NSURL(fileURLWithPath: path).lastPathComponent!, ofType: nil) {
-                entirePath = bundlePath
-            }
-            #endif
+    public func createApplication() -> HttpCallback {
+        
+        func innerHandle(incomingMessage: IncomingMessage, serverResponse: ServerResponse, next: NextCallback?){
+        
+            let res = Response(response: serverResponse)
+            let req = Request(request: incomingMessage)
             
-            if args != nil {
-                render.render(entirePath, args: args!) { data in
-                    self.write(data)
-                }
-            } else {
-                render.render(entirePath) { data in
-                    self.write(data)
-                }
-            }
+            self.handle(req, res: res, next: next)
+            
         }
-        end()
-    }
-    
-    public func redirect(url: String){
-        self.writeHead(302, headers: [Location:url])
-        self.end()
+        
+        return innerHandle
     }
 }
 
-
-
-
-//extention incomingMessage for lime
-extension IncomingMessage {
-    
-}
 
 
 

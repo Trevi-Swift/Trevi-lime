@@ -15,7 +15,7 @@ import Trevi
 */
 public class Layer {
     
-    private var handle: HttpCallback?
+    private var handle: LimeCallback?
     public var path: String! = ""
     public var regexp: RegExp!
     public var name: String!
@@ -25,7 +25,7 @@ public class Layer {
     public var keys: [String]? // params key ex path/:name , name is key
     public var params: [String: String]?
     
-    public init(path: String ,name: String? = "function", options: Option? = nil, fn: HttpCallback){
+    public init(path: String ,name: String? = "function", options: Option? = nil, fn: LimeCallback){
         setupAfterInit(path, opt: options, name: name, fn: fn)
         
     }
@@ -34,7 +34,7 @@ public class Layer {
         
     }
     
-    private func setupAfterInit(p: String, opt: Option? = nil, name: String?, fn: HttpCallback){
+    private func setupAfterInit(p: String, opt: Option? = nil, name: String?, fn: LimeCallback){
         self.handle = fn
         self.path = p
         self.name = name
@@ -61,7 +61,7 @@ public class Layer {
     }
     
     //handle mathed route module
-    public func handleRequest(req: IncomingMessage , res: ServerResponse, next: NextCallback){
+    public func handleRequest(req: Request , res: Response, next: NextCallback){
         let function = self.handle
         function!(req,res,next)
     }

@@ -28,7 +28,7 @@ public class ServeStatic: Middleware {
     }
     
     
-    public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
+    public func handle(req: Request, res: Response, next: NextCallback?) {
         var entirePath = req.url
     
         let type: String! = req.url.componentsSeparatedByString(".").last!

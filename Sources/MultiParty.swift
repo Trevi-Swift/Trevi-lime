@@ -155,7 +155,7 @@ public class MultiParty: Middleware {
     }
     
     // Should be implemented in order to use as middleware.
-    public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
+    public func handle(req: Request, res: Response, next: NextCallback?) {
         
         var contentType = req.header[Content_Type]
         

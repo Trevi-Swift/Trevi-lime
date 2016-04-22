@@ -16,7 +16,7 @@ public class Route{
     public var path: String?
     public var methods = [HTTPMethodType]()
     public var method: HTTPMethodType!
-    public var dispatch: HttpCallback? {
+    public var dispatch: LimeCallback? {
         
         didSet{
             let layer = Layer(path: "", name: "anonymous", options: Option(end: true), fn: self.dispatch!)
@@ -37,7 +37,7 @@ public class Route{
     }
     
     //To connect and use the ihamsu with a layer.
-    public func dispatchs(req: IncomingMessage,res: ServerResponse,next: NextCallback?){
+    public func dispatchs(req: Request, res: Response, next: NextCallback?){
         
         var idx = 0
         let stack = self.stack

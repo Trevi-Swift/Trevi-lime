@@ -10,7 +10,7 @@ import Foundation
 import Trevi
 import TreviSys
 
-public typealias LoggerProccessor = (IncomingMessage, ServerResponse) -> String
+public typealias LoggerProccessor = (Request, Response) -> String
 public var funcTbl: [String : LoggerProccessor] = [
     "http-version"  : log_http_version,
     "response-time" : log_response_time,
@@ -51,7 +51,7 @@ public class Logger: Middleware {
     deinit {
     }
     
-    public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) -> () {
+    public func handle(req: Request, res: Response, next: NextCallback?) -> () {
         res.onFinished = requestLog
         next!()
     }
@@ -64,13 +64,13 @@ public class Logger: Middleware {
      * destination.
      *
      */
-    private func requestLog(response res: ServerResponse) {
+    private func requestLog(response res: Response) {
         let log = compileLog(self, req: res.req, res: res)
         print(log)
     }
 }
 
-private func compileLog(logger: Logger, req: IncomingMessage, res: ServerResponse) -> String {
+private func compileLog(logger: Logger, req: Request, res: Response) -> String {
     var isCompiled = false
     var compiled = String(logger.format)
     
@@ -100,35 +100,35 @@ private func compileLog(logger: Logger, req: IncomingMessage, res: ServerRespons
     return isCompiled ? compiled : ""
 }
 
-private func log_http_version ( req: IncomingMessage, res: ServerResponse ) -> String {
+private func log_http_version ( req: Request, res: Response ) -> String {
     return req.version
 }
 
-private func log_response_time ( req: IncomingMessage, res: ServerResponse ) -> String {
+private func log_response_time ( req: Request, res: Response ) -> String {
     let elapsedTime = Double( res.startTime.timeIntervalSinceDate( req.startTime ) )
     return "\(elapsedTime * 1000)"
 }
 
-private func log_remote_addr ( req: IncomingMessage, res: ServerResponse ) -> String {
+private func log_remote_addr ( req: Request, res: Response ) -> String {
     guard let addr = getEndpointFromSocketAddress(Tcp.getPeerName(uv_tcp_ptr(req.socket.handle))) else {
         return ""
     }
     return addr.host
 }
 
-private func log_date ( req: IncomingMessage, res: ServerResponse ) -> String {
+private func log_date ( req: Request, res: Response ) -> String {
     return getCurrentDatetime()
 }
 
-private func log_method ( req: IncomingMessage, res: ServerResponse ) -> String {
+private func log_method ( req: Request, res: Response ) -> String {
     return req.method.rawValue
 }
 
-private func log_url ( req: IncomingMessage, res: ServerResponse ) -> String {
+private func log_url ( req: Request, res: Response ) -> String {
     return req.url
 }
 
-private func log_referrer ( req: IncomingMessage, res: ServerResponse ) -> String {
+private func log_referrer ( req: Request, res: Response ) -> String {
     if let referer = req.header["referer"] {
         return referer
     } else if let referrer = req.header["referrer"] {
@@ -138,7 +138,7 @@ private func log_referrer ( req: IncomingMessage, res: ServerResponse ) -> Strin
     }
 }
 
-private func log_user_agent ( req: IncomingMessage, res: ServerResponse ) -> String {
+private func log_user_agent ( req: Request, res: Response ) -> String {
     if let agent = req.header["user-agent"] {
         return agent
     } else {
@@ -146,6 +146,6 @@ private func log_user_agent ( req: IncomingMessage, res: ServerResponse ) -> Str
     }
 }
 
-private func log_status ( req: IncomingMessage, res: ServerResponse ) -> String {
+private func log_status ( req: Request, res: Response ) -> String {
     return "\(res.statusCode)"
 }

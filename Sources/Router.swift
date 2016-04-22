@@ -22,7 +22,7 @@ public class Router: Middleware{
     private var stack = [Layer]()
     
     public init(){}
-    public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback? ) {
+    public func handle(req: Request, res: Response, next: NextCallback? ) {
         
         var idx = 0
         var options = [HTTPMethodType:Int]()
@@ -109,10 +109,10 @@ public class Router: Middleware{
             
             if layer.params != nil{
                 var params = layer.params
-                if parantParams != nil {
+                if let parantParams = parantParams {
                     params = mergeParams(layer.params, src: parantParams)
                 }
-                req.params = params
+                req.params = params!
             }
             
             let layerPath = layer.path
@@ -140,7 +140,7 @@ public class Router: Middleware{
         return _dest
     }
     
-    private func poccessParams(layer: Layer, paramsCalled: [String: String]? = nil, req: IncomingMessage, res: ServerResponse, cb:((String?)->())){
+    private func poccessParams(layer: Layer, paramsCalled: [String: String]? = nil, req: Request, res: Response, cb:((String?)->())){
         cb(nil)
     }
     
@@ -148,7 +148,7 @@ public class Router: Middleware{
         return layer.match(path)
     }
     
-    private func getPathname(req: IncomingMessage) -> String{
+    private func getPathname(req: Request) -> String{
         //should parsing req.url
         return req.url!
     }
@@ -157,50 +157,50 @@ public class Router: Middleware{
         stack.append(Layer(path: path!, options: Option(end: false), module: md))
     }
     
-    func use(fns: HttpCallback...){
+    func use(fns: LimeCallback...){
         for fn in fns {
             stack.append(Layer(path: "/", name: "function", options: Option(end: false), fn: fn))
         }
     }
     
     
-    public func all ( path: String, _ callback: HttpCallback... ) {
+    public func all ( path: String, _ callback: LimeCallback... ) {
         
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func get (path: String, _ callback: HttpCallback) {
+    public func get (path: String, _ callback: LimeCallback) {
         boundDispatch(path, callback , .GET)
     }
     /**
      * Support http ver 1.1/1.0
      */
 
-    public func post ( path: String, _ middleWare: Middleware? = nil, _ callback: HttpCallback ) {
+    public func post ( path: String, _ middleWare: Middleware? = nil, _ callback: LimeCallback ) {
         boundDispatch(path, callback, .POST, middleWare)
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func put ( path: String, _ callback: HttpCallback ) {
+    public func put ( path: String, _ callback: LimeCallback ) {
         boundDispatch(path, callback , .PUT)
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func head ( path: String, _ callback: HttpCallback... ) {
+    public func head ( path: String, _ callback: LimeCallback... ) {
         
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func delete ( path: String, _ callback: HttpCallback... ) {
+    public func delete ( path: String, _ callback: LimeCallback... ) {
         
     }
     
     
-    private func boundDispatch(path: String, _ callback: HttpCallback, _ method: HTTPMethodType , _ md: Middleware? = nil ){
+    private func boundDispatch(path: String, _ callback: LimeCallback, _ method: HTTPMethodType , _ md: Middleware? = nil ){
         let route = Route(method: method, path)
         if let middleware = md {
             

@@ -15,7 +15,7 @@ class Query: Middleware {
     init(){
     }
     
-    func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
+    func handle(req: Request, res: Response, next: NextCallback?) {
         // Parsing url query by using regular expression.
         queryParse(req.url) { query in
             req.query = query

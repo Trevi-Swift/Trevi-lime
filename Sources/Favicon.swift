@@ -18,7 +18,7 @@ public class Favicon: Middleware {
 
     }
 
-    public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
+    public func handle(req: Request, res: Response, next: NextCallback?) {
 
 
         if req.url == "/favicon.ico" {

@@ -9,16 +9,6 @@
 import Foundation
 import Trevi
 
-private protocol parseAble{
-    func parse() -> [String:AnyObject!]!
-}
-
-struct ParserdData {
-    var name : String?
-    var value : String?
-    var type : String?
-    var data : NSData?
-}
 
 
 /*
@@ -35,12 +25,12 @@ public class BodyParser: Middleware{
     public init(){
         
     }
-
-    public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
+    
+    public func handle(req: Request, res: Response, next: NextCallback?) {
         
     }
     
-    public static func getBody(req: IncomingMessage, _ cb: (body: String)->()){
+    public static func getBody(req: Request, _ cb: (body: String)->()){
         
         var body: NSMutableData = NSMutableData()
         func ondata(dt : NSData){
@@ -54,15 +44,15 @@ public class BodyParser: Middleware{
         req.on("end", onend)
     }
     
-    public static func read(req: IncomingMessage, _ next: NextCallback?, parse: ((req: IncomingMessage,  next: NextCallback ,  body: String!)->())){
+    public static func read(req: Request, _ next: NextCallback?, parse: ((req: Request,  next: NextCallback ,  body: String!)->())){
         getBody(req) { body in
             parse(req: req, next: next!, body: body)
             
         }
     }
     
-    public static func urlencoded() -> HttpCallback{
-        func parse(req: IncomingMessage, _ next: NextCallback? , _ bodyData: String!){
+    public static func urlencoded() -> LimeCallback{
+        func parse(req: Request, _ next: NextCallback? , _ bodyData: String!){
             var body = bodyData
             if body != nil {
                 
@@ -82,7 +72,7 @@ public class BodyParser: Middleware{
             }
         }
         
-        func urlencoded(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
+        func urlencoded(req: Request, res: Response, next: NextCallback?) {
             guard req.header[Content_Type] == "application/x-www-form-urlencoded" else {
                 return next!()
             }
@@ -102,9 +92,9 @@ public class BodyParser: Middleware{
     }
     
     
-    public static func json() -> HttpCallback {
+    public static func json() -> LimeCallback {
         
-        func parse(req: IncomingMessage, _ next: NextCallback? , _ body: String!){
+        func parse(req: Request, _ next: NextCallback? , _ body: String!){
             do {
                 
                 let data = body.dataUsingEncoding(NSUTF8StringEncoding)
@@ -120,7 +110,7 @@ public class BodyParser: Middleware{
             }
         }
         
-        func jsonParser(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
+        func jsonParser(req: Request, res: Response, next: NextCallback?) {
             guard req.header[Content_Type] == "application/json" else {
                 return next!()
             }
@@ -139,9 +129,9 @@ public class BodyParser: Middleware{
     }
     
     
-    public static func text() -> HttpCallback{
+    public static func text() -> LimeCallback{
         
-        func parse(req: IncomingMessage, _ next: NextCallback? , _ body: String!){
+        func parse(req: Request, _ next: NextCallback? , _ body: String!){
 
             if let ret = body {
                 req.bodyText = ret
@@ -151,7 +141,7 @@ public class BodyParser: Middleware{
             }
         }
         
-        func textParser(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
+        func textParser(req: Request, res: Response, next: NextCallback?) {
             guard req.header[Content_Type] == "text/plain" else {
                 return next!()
             }

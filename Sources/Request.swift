@@ -11,109 +11,176 @@ import Trevi
 
 
 // Currently, you don't use this class, but will use the next.
-public class Request {
+public class Request{
     
-    // HTTP method like GET, POST.
-    public var method: HTTPMethodType = HTTPMethodType.UNDEFINED
+    public var request: IncomingMessage!
     
-    public var httpVersionMajor : String? = "1"
-    
-    public var httpVersionMinor : String? = "1"
-    
-    public var version : String {
-        return "\(httpVersionMajor).\(httpVersionMinor)"
+    public var socket: Socket{
+        get{
+            return request.socket
+        }
+        set{
+            request.socket = newValue
+        }
     }
     
-    // Original HTTP data include header & body
-    public var headerString: String! {
-        didSet {
-            parse()
+    public var connection: Socket! {
+        get{
+            return request.socket
+        }
+        set{
+            request.socket = newValue
         }
     }
     
     // HTTP header
-    public var header    = [ String: String ] ()
+    public var header: [ String: String ]!{
+        get{
+            return request.header
+        }
+        set{
+            request.header = newValue
+        }
+    }
+
     
-    // HTTP body
-    public var body      = [String : AnyObject]()
+    public var httpVersionMajor: String {
+        get{
+            return request.httpVersionMajor
+        }
+        set{
+            request.httpVersionMajor = newValue
+        }
+    }
+
     
-    public var bodyFragments = [String]()
+    public var httpVersionMinor: String {
+        get{
+            return request.httpVersionMinor
+        }
+        set{
+            request.httpVersionMinor = newValue
+        }
+    }
+
     
-    // Body parsed to JSON
-    public var json: [String:AnyObject!]!
+    public var version : String{
+        return request.version
+    }
+
     
-    // Parameter in url for semantic URL
-    // ex) /url/:name
-    public var params    = [ String: String ] ()
+    public var method: HTTPMethodType!{
+        get{
+            return request.method
+        }
+        set{
+            request.method = newValue
+        }
+    }
+
+    
+    // Seperated path by component from the requested url
+    public var pathComponent: [String] {
+        get{
+            return request.pathComponent
+        }
+        set{
+            request.pathComponent = newValue
+        }
+    }
     
     // Qeury string from requested url
     // ex) /url?id="123"
-    public var query     = [ String: String ] ()
+    public var query: [ String: String ]!{
+        get{
+            return request.query
+        }
+        set{
+            request.query = newValue
+        }
+    }
+
     
-    // Seperated path by component from the requested url
-    public var pathComponent: [String] = [ String ] ()
-    
-    // Requested url
     public var path: String {
-        didSet {
-            let segment = self.path.componentsSeparatedByString ( "/" )
-            for idx in 0 ..< segment.count where idx != 0 {
-                pathComponent.append ( segment[idx] )
-            }
+        get{
+            return request.path
+        }
+        set{
+            request.path = newValue
+        }
+    }
+
+    
+    public var hasBody: Bool! {
+        get{
+            return request.hasBody
+        }
+        set{
+            request.hasBody = newValue
+        }
+    }
+
+    
+    //response only
+    public var statusCode: String!{
+        get{
+            return request.statusCode
+        }
+        set{
+            request.statusCode = newValue
+        }
+    }
+
+    public var client: AnyObject!{
+        get{
+            return request.client
+        }
+        set{
+            request.client = newValue
+        }
+    }
+
+    public func on(name: String, _ emitter: Any){
+        request.on(name, emitter)
+    }
+
+    public func emit(name: String, _ arguments : AnyObject...){
+        request.emit(name, arguments)
+    
+    }
+    
+    // for lime (not fixed)
+    public var baseUrl: String! = ""
+    public var route: AnyObject! = nil
+    public var originUrl: String! = ""
+    public var params:[String: String]! = [String: String]()
+    public var json: [String: String]! = [String: String]()
+    public var body: [String: String]! = [String: String]()
+    public var bodyText: String! = ""
+    
+    public var files: [String: File]!
+    
+    public var app: AnyObject!
+    
+    public var startTime: NSDate
+    
+    //server only
+    public var url: String!{
+        get{
+            return request.url
+        }
+        set{
+            request.url = newValue
         }
     }
     
-    public let startTime: NSDate
     
-    // A variable to contain something needs by user.
-    public var attribute = [ String : String ] ()
-    
-    public init () {
-        self.path      = String ()
+    public init(request: IncomingMessage) {
+        self.request = request
         self.startTime = NSDate ()
+        query = [String:String]()
     }
     
-    public init ( _ headerStr: String ) {
-        self.path      = String ()
-        self.startTime = NSDate ()
-        self.headerString = headerStr
-        parse()
-    }
-    
-    private final func parse () {
-        
-        // TODO : error when file uploaded..
-        guard let converted = headerString else {
-            return
-        }
-        let requestHeader: [String] = converted.componentsSeparatedByString ( CRLF )
-        let requestLineElements: [String] = requestHeader.first!.componentsSeparatedByString ( SP )
-        
-        // This is only for HTTP/1.x
-        if requestLineElements.count == 3 {
-            if let method = HTTPMethodType ( rawValue: requestLineElements[0] ) {
-                self.method = method
-            }
-            
-            let httpProtocolString = requestLineElements.last!
-            let versionComponents: [String] = httpProtocolString.componentsSeparatedByString( "/" )
-            let version: [String] = versionComponents.last!.componentsSeparatedByString( "." )
-            
-            httpVersionMajor = version.first!
-            httpVersionMinor = version.last!
-            
-            parseHeader( requestHeader )
-        }
-    }
-    
-    private final func parseHeader ( fields: [String] ) {
-        for _idx in 1 ..< fields.count {
-            if let fieldSet: [String] = fields[_idx].componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
-                self.header[fieldSet[0].trim()] = fieldSet[1].trim();
-                self.header[fieldSet[0].trim().lowercaseString] = fieldSet[1].trim();
-            }
-        }
-    }
 }
 
 
