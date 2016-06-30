@@ -145,8 +145,8 @@ public class Request{
     }
 
     public func emit(name: String, _ arguments : AnyObject...){
-        request.emit(name, arguments)
-    
+        // ## Emergency Hotfix ##
+        //request.emit(name, arguments)
     }
     
     // for lime (not fixed)
