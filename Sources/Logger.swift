@@ -32,6 +32,7 @@ public class Logger: Middleware {
     
     public var name: MiddlewareName
     public let format: String
+    public let output: FileSystem.WriteStream?
     
     public init (format: String) {
         name = .Logger
@@ -46,6 +47,10 @@ public class Logger: Middleware {
         default:
             self.format = format
         }
+        
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "yyyyMMddHHmm"
+        self.output = FileSystem.WriteStream(path: __dirname + "/lime_\(formatter.stringFromDate(NSDate())).log")
     }
     
     deinit {
@@ -66,7 +71,8 @@ public class Logger: Middleware {
      */
     private func requestLog(response res: Response) {
         let log = compileLog(self, req: res.req, res: res)
-        print(log)
+        print(log, terminator: "")
+        output?.writeData(log.dataUsingEncoding(NSUTF8StringEncoding)!)
     }
 }
 
@@ -97,7 +103,7 @@ private func compileLog(logger: Logger, req: Request, res: Response) -> String {
         isCompiled = true
     }
     
-    return isCompiled ? compiled : ""
+    return isCompiled ? compiled + "\n" : ""
 }
 
 private func log_http_version ( req: Request, res: Response ) -> String {

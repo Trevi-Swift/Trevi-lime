@@ -129,7 +129,6 @@ private func compileSwift(path: String, code: String, callback: ((String) -> Voi
     
     let file = FileSystem.WriteStream(path: compileFile)
     file?.writeData(code.dataUsingEncoding(NSUTF8StringEncoding)!)
-    file?.close()
     
     #if os(Linux)
         if Glibc.system("bash -c \"source ~/.profile && swiftc \(compileFile) -o /tmp/ssp\(timestamp) && chmod +x /tmp/ssp\(timestamp)\"") == 0 {
